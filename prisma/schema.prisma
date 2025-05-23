@@ -42,7 +42,7 @@ model Restaurant {
   name      String
   country   Country
   menuItems MenuItem[]
-  orders    Order[]
+   orderItems  OrderItem[] 
 }
 
 model MenuItem {
@@ -56,15 +56,14 @@ model MenuItem {
 }
 
 model Order {
-  id           Int         @id @default(autoincrement())
-  user         User        @relation(fields: [userId], references: [id])
-  userId       Int
-  restaurant   Restaurant  @relation(fields: [restaurantId], references: [id])
-  restaurantId Int
-  status       OrderStatus
-  orderItems   OrderItem[]
-  createdAt    DateTime    @default(now())
+  id         Int         @id @default(autoincrement())
+  user       User        @relation(fields: [userId], references: [id])
+  userId     Int
+  status     OrderStatus
+  orderItems OrderItem[]
+  createdAt  DateTime    @default(now())
 }
+
 
 enum OrderStatus {
   PENDING
@@ -73,13 +72,16 @@ enum OrderStatus {
 }
 
 model OrderItem {
-  id         Int      @id @default(autoincrement())
-  order      Order    @relation(fields: [orderId], references: [id])
-  orderId    Int
-  menuItem   MenuItem @relation(fields: [menuItemId], references: [id])
-  menuItemId Int
-  quantity   Int
+  id            Int         @id @default(autoincrement())
+  order         Order       @relation(fields: [orderId], references: [id])
+  orderId       Int
+  menuItem      MenuItem    @relation(fields: [menuItemId], references: [id])
+  menuItemId    Int
+  restaurant    Restaurant  @relation(fields: [restaurantId], references: [id])
+  restaurantId  Int
+  quantity      Int
 }
+
 
 model PaymentMethod {
   id        Int      @id @default(autoincrement())
@@ -88,37 +90,4 @@ model PaymentMethod {
   type      String
   details   Json
   createdAt DateTime @default(now())
-}
-
-model FormSchema {
-  id          Int             @id @default(autoincrement())
-  name        String          // e.g. "login" or "signup"
-  description String?         // optional description of the form
-  fields      FormField[]
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
-}
-
-
-model FormField {
-  id            Int         @id @default(autoincrement())
-  formSchema    FormSchema  @relation(fields: [formSchemaId], references: [id])
-  formSchemaId  Int
-  name          String      
-  label         String      
-  type          FieldType   
-  required      Boolean     @default(true)
-  placeholder   String?     
-  order         Int         
-  validations   Json?       
-}
-
-enum FieldType {
-  TEXT
-  PASSWORD
-  EMAIL
-  NUMBER
-  CHECKBOX
-  SELECT
-  DATE
 }

@@ -13,7 +13,7 @@ module.exports = function enforceCountryEntity({ entity, param }) {
     if (req.user.role === 'ADMIN') return next();
 
     const id = req.params[param] || req.body[param];
-
+console.log(id)
     if (!id) return res.status(400).json({ message: `Missing ${param}` });
 
     let resource;
